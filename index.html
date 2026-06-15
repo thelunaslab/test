@@ -934,50 +934,58 @@ alert("herE2");
 		if (!product.html_id) return;
 
             productsDiv.innerHTML += `
-        <div class="card">
-          <div class="info">
-            <div class="${product.title_class}">
+				<div class="card">
+					<div class="info">
+						<div class="${product.title_class}">
+				`;
+		if (product.combo_number) {
+			productsDiv.innerHTML += `
+							<span class="combo-label">&nbsp;Combo ${product.combo_number}&nbsp;</span>&nbsp;
+				`;
+		}
+			productsDiv.innerHTML += `
+							${product.name}&nbsp;
 			`;
-			if (product.combo_number) {
-				productsDiv.innerHTML += `
-					<span class="combo-label">&nbsp;Combo ${product.combo_number}&nbsp;</span>
-					`;
-			}
+		if (product.quantity) {
 			productsDiv.innerHTML += `
-			&nbsp;${product.name}</div>
+							<span class="product-qty">(${product.quantity})</span>
+				`;
+		}
+			productsDiv.innerHTML += `
+						</div>
 			`;
-			if (product.combo_number) {
-				productsDiv.innerHTML += `
-					<div class="combo-products">${product.description}</div>
-					`;
-			}
+		if (product.combo_number) {
 			productsDiv.innerHTML += `
-				<div class="name">
-					`;
-			if (product.strike_price) {
-				productsDiv.innerHTML += `
-				<span class="name-strike">₹${product.strike_price}</span>&nbsp;&nbsp;
-					`;
-			}
+						<div class="combo-products">${product.description}</div>
+			`;
+		}
 			productsDiv.innerHTML += `
-				₹${product.price}
-					`;
-			if (product.tag) {
-				productsDiv.innerHTML += `
-					&nbsp;&nbsp;&nbsp;&nbsp;<span class="${product.tag_class}">&nbsp;★ ${product.tag}&nbsp;</span>
-					`;
-			}
+						<div class="name">
+			`;
+		if (product.strike_price) {
 			productsDiv.innerHTML += `
+							<span class="name-strike">₹${product.strike_price}</span>&nbsp;&nbsp;
+			`;
+		}
+			productsDiv.innerHTML += `
+							₹${product.price}
+			`;
+		if (product.tag) {
+			productsDiv.innerHTML += `
+							&nbsp;&nbsp;&nbsp;&nbsp;<span class="${product.tag_class}">&nbsp;★ ${product.tag}&nbsp;</span>
+				`;
+		}
+			productsDiv.innerHTML += `
+						</div>
 					</div>
-          </div>
-          <button type="button" class="add-btn" onclick="addItem('${product.html_id}', this)">ADD</button>
-          <div class="counter" id="${product.html_id}_counter">
-            <button type="button" onclick="changeQty('${product.html_id}', -1)">-</button>
-            <span id="${product.html_id}_display">1</span>
-            <button type="button" id="${product.html_id}_plus" onclick="changeQty('${product.html_id}', 1)">+</button>
-          </div>
-          <input type="hidden" id="${product.html_id}" value="0">
-        </div>
+					<button type="button" class="add-btn" onclick="addItem('${product.html_id}', this)">ADD</button>
+					<div class="counter" id="${product.html_id}_counter">
+						<button type="button" onclick="changeQty('${product.html_id}', -1)">-</button>
+						<span id="${product.html_id}_display">1</span>
+						<button type="button" id="${product.html_id}_plus" onclick="changeQty('${product.html_id}', 1)">+</button>
+					</div>
+					<input type="hidden" id="${product.html_id}" value="0">
+				</div>
             `;
         });
     },
