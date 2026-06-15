@@ -1,0 +1,4 @@
+ID,Product,Category,Price,Stock,Supplier,Weight,Color,Status,Description
+1,Mango Float,Dessert,299,25,Tropical Foods,500g,Yellow,Available,Fresh mango dessert
+2,Biscoff Float,Dessert,349,15,Lotus Foods,550g,Brown,Available,Biscoff flavored dessert
+3,Chocolate Float,Dessert,329,10,Cocoa World,520g,Dark Brown,Low Stock,Premium chocolate dessert
