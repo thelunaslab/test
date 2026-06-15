@@ -1,103 +1,966 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>CSV Table Example</title>
 
+  <head>
+    <title>Order Luna's</title>
+    <link rel="icon" type="image/png" href="./lunaslogo.jpg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 30px;
-            background: #f5f5f5;
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: #f5f5f5;
+      }
+
+      .header {
+        background: white;
+        padding: 12px 15px;
+        font-size: 20px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .logo {
+        width: 72px;
+        height: 72px;
+        object-fit: cover;
+        border-radius: 36px;
+        /* makes it look nicer */
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #777;
+        margin-bottom: 15px;
+      }
+
+      .floating-cart {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        background: #275538;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        display: none;
+        z-index: 999;
+        font-size: 14px;
+      }
+
+      .container {
+        padding: 10px;
+        padding-bottom: 20px;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .combo-label {
+        background: #568203;
+        color: #fff;
+        font-size: 14px;
+        border: none;
+        padding: 1px 2px;
+        border-radius: 6px;
+        font-weight: bold;
+      }
+
+      .product-qty {
+        font-size: 13px;
+        color: #777;
+      }
+
+      .combo-products {
+        font-size: 13px;
+        color: #777;
+      }
+
+      .info {
+        max-width: 65%;
+      }
+
+      .name {
+        font-weight: 600;
+        font-size: 15px;
+      }
+
+      .name-strike {
+        position: relative;
+        display: inline-block;
+        /* Required for precise positioning */
+        font-weight: 600;
+        font-size: 15px;
+        color: #777;
+      }
+
+      .name-strike::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 1.5px;
+        background: red;
+        transform: rotate(-5deg);
+        /* Adjust degrees for steeper/flatter line */
+      }
+
+      .name-mango {
+        font-weight: bold;
+        font-size: 15px;
+        color: #FFA62B;
+      }
+
+      .name-coffee {
+        font-weight: bold;
+        font-size: 15px;
+        color: #6F4E37;
+      }
+
+      .name-combo {
+        font-weight: bold;
+        font-size: 15px;
+      }
+
+      .desc {
+        font-size: 12px;
+        color: gray;
+      }
+
+      .add-btn {
+        border: 2px solid #275538;
+        color: #275538;
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-weight: bold;
+        background: white;
+        cursor: pointer;
+      }
+
+      .counter {
+        display: none;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .counter button {
+        width: 28px;
+        height: 28px;
+        border: none;
+        background: #275538;
+        color: white;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .form-section {
+        background: white;
+        padding: 15px;
+        margin-top: 10px;
+        border-radius: 12px;
+      }
+
+      .message-section {
+        background: white;
+        padding: 15px;
+		padding-top: 5px;
+		padding-bottom: 5px;
+        margin-top: 10px;
+        border-radius: 12px;
+        font-size: 14px;
+      }
+
+      input,
+      textarea {
+        width: 95%;
+        padding: 10px;
+        margin-top: 8px;
+        margin-bottom: 12px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+      }
+
+      select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 8px;
+        margin-bottom: 12px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+      }
+
+      button.submit {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background: #28a745;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      button.submit:disabled {
+        background: #ccc;
+      }
+
+      /* LOADING OVERLAY */
+      #loadingOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 9999;
+      }
+
+      /* SPINNER */
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #eee;
+        border-top: 5px solid #28a745;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
         }
 
-        h1 {
-            text-align: center;
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      #loadingOverlay p {
+        margin-top: 15px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      /* SUCCESS OVERLAY */
+      #successOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 10000;
+      }
+
+      /* CHECKMARK */
+      .success-checkmark {
+        width: 80px;
+        height: 115px;
+      }
+
+      .check-icon {
+        width: 80px;
+        height: 80px;
+        position: relative;
+        border-radius: 50%;
+        box-sizing: content-box;
+        border: 4px solid #28a745;
+      }
+
+      .check-icon::before,
+      .check-icon::after {
+        content: '';
+        height: 100px;
+        position: absolute;
+        background: white;
+        transform: rotate(-45deg);
+      }
+
+      .icon-line {
+        height: 5px;
+        background-color: #28a745;
+        display: block;
+        border-radius: 2px;
+        position: absolute;
+        z-index: 10;
+      }
+
+      .line-tip {
+        top: 46px;
+        left: 14px;
+        width: 25px;
+        transform: rotate(45deg);
+        animation: icon-line-tip 0.4s;
+      }
+
+      .line-long {
+        top: 38px;
+        right: 8px;
+        width: 47px;
+        transform: rotate(-45deg);
+        animation: icon-line-long 0.4s;
+      }
+
+      @keyframes icon-line-tip {
+        from {
+          width: 0;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            margin-top: 20px;
+        to {
+          width: 25px;
+        }
+      }
+
+      @keyframes icon-line-long {
+        from {
+          width: 0;
         }
 
-        th {
-            background: #444;
-            color: white;
-            padding: 12px;
-            text-align: left;
+        to {
+          width: 47px;
+        }
+      }
+
+      .success-message {
+        margin-top: 0px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #28a745;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        font-size: 14px;
+        margin-top: 8px;
+      }
+
+      .required {
+        color: red;
+        margin-left: 3px;
+      }
+
+      .required-field {
+        color: red;
+        margin-left: 3px;
+        display: block;
+        font-weight: 400;
+        font-size: 14px;
+        margin-top: 8px;
+      }
+
+      .ribbon-gold {
+        display: inline-block;
+        background: linear-gradient(to bottom, #d49a2a 0%, #b87b00 100%);
+        /* Gold gradient */
+        color: white;
+        padding: 1px 13px;
+        padding-bottom: 2.5px;
+        /* Extra horizontal padding for the notches */
+        /* font-family: 'Times New Roman', serif; */
+        /* Serif font like the image */
+        font-weight: bold;
+        font-size: 10px;
+        letter-spacing: 1px;
+        /* This creates the fishtail/swallowtail shape */
+        clip-path: polygon(0 0, 100% 0, 90% 50%, 100% 100%, 0 100%, 10% 50%);
+        /* Optional: adds a subtle text shadow for depth */
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      .ribbon-magenta {
+        display: inline-block;
+        background: linear-gradient(to bottom, #e05695 0%, #c2005d 100%);
+        /* Gold gradient */
+        color: white;
+        padding: 1px 13px;
+        padding-bottom: 2.5px;
+        /* Extra horizontal padding for the notches */
+        /* font-family: 'Times New Roman', serif; */
+        /* Serif font like the image */
+        font-weight: bold;
+        font-size: 10px;
+        letter-spacing: 1px;
+        /* This creates the fishtail/swallowtail shape */
+        clip-path: polygon(0 0, 100% 0, 90% 50%, 100% 100%, 0 100%, 10% 50%);
+        /* Optional: adds a subtle text shadow for depth */
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      /* CART MODAL */
+      .cart-modal {
+        display: none;
+        position: fixed;
+        z-index: 10001;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .cart-modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 400px;
+      }
+
+      .cart-modal table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      .cart-modal th,
+      .cart-modal td {
+        border-bottom: 1px solid #eee;
+        padding: 8px;
+        text-align: left;
+      }
+
+      .close-btn {
+        margin-top: 15px;
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background: #275538;
+        color: white;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .cart-modal {
+        cursor: pointer;
+      }
+
+      .cart-modal-content {
+        cursor: default;
+      }
+
+      .important-notice {
+        margin: 20px 15px;
+        background: #fffdf7;
+        border: 2px solid #d4af37;
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+      }
+
+      .notice-title {
+        background: linear-gradient(135deg,
+            #c99a1a,
+            #d4af37,
+            #c99a1a);
+        color: #fff;
+        text-align: center;
+        font-weight: 700;
+        letter-spacing: 1px;
+        font-size: 15px;
+        padding: 10px;
+        text-transform: uppercase;
+      }
+
+      .notice-icon {
+        margin-right: 10px;
+      }
+
+      .notice-item {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 10px 14px;
+      }
+
+      .notice-badge {
+        min-width: 36px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f8eed1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+      }
+
+      .notice-text {
+        flex: 1;
+        color: #222;
+        font-size: 14px;
+        line-height: 1.45;
+      }
+
+      .notice-text strong {
+        color: #0f5132;
+        font-weight: 700;
+      }
+
+      .notice-bottom-divider {
+        text-align: center;
+        color: #c99a1a;
+        font-size: 16px;
+        margin: 6px 26px;
+        position: relative;
+      }
+
+      .notice-bottom-divider:before,
+      .notice-bottom-divider:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 42%;
+        height: 1px;
+        background: #d4af37;
+      }
+
+      .notice-bottom-divider:before {
+        left: 0;
+      }
+
+      .notice-bottom-divider:after {
+        right: 0;
+      }
+
+      .notice-footer {
+        text-align: center;
+        padding: 0 14px 12px;
+        color: #9b6b00;
+        font-size: 13px;
+        font-style: italic;
+        line-height: 1.5;
+      }
+
+      /* Mobile */
+      @media (max-width:768px) {
+        .important-notice {
+          margin: 12px 12px 16px;
+          border-radius: 16px;
         }
 
-        td {
-            padding: 10px;
-            border: 1px solid #ddd;
+        .notice-title {
+          font-size: 15px;
+          padding: 10px;
+          letter-spacing: 0.5px;
         }
 
-        tr:nth-child(even) {
-            background: #f9f9f9;
+        .notice-item {
+          padding: 10px 14px;
+          gap: 10px;
         }
 
-        tr:hover {
-            background: #f1f1f1;
+        .notice-badge {
+          width: 34px;
+          height: 34px;
+          min-width: 34px;
+          font-size: 15px;
         }
+
+        .notice-text {
+          font-size: 14px;
+          line-height: 1.45;
+        }
+
+        .notice-bottom-divider {
+          font-size: 12px;
+          margin: 6px 14px;
+        }
+
+        .notice-footer {
+          font-size: 13px;
+          line-height: 1.4;
+          padding: 0 14px 10px;
+        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
+    <div class="header">
+      <img src="./lunaslogo.jpg" class="logo">
+    </div>
+    <p class="subtitle">Mabuhay! Welcome sa Luna's</p>
+    <div class="floating-cart" id="cartBar" onclick="openCartModal()">🧺 0</div>
+<!--    <div class="important-notice">
 
-    <h1>Product Inventory</h1>
+      <div class="notice-title">
+        <span class="notice-icon">📢</span>
+        IMPORTANT NOTICE
+      </div>
 
-    <table id="csvTable">
-        <thead></thead>
-        <tbody></tbody>
-    </table>
+      <div class="notice-item">&nbsp;
+        <div class="notice-badge">🗓️</div>
+        <div class="notice-text">
+          We are closed this weekend
+          <strong>(13–14 June 2026).</strong>
+        </div>
+      </div>
 
-<script>
-fetch('data.csv')
-    .then(response => response.text())
-    .then(csv => {
+      <div class="notice-item">&nbsp;
+        <div class="notice-badge">🚚</div>
+        <div class="notice-text">
+          Orders placed during these dates will be delivered
+          <strong>from 15 June 2026 onwards.</strong>
+        </div>
+      </div>
 
-        const rows = csv.trim().split('\n');
+      <div class="notice-item">&nbsp;
+        <div class="notice-badge">🛡️</div>
+        <div class="notice-text">
+          We will personally contact you to confirm the delivery date
+          <strong>before any payment is collected.</strong>
+        </div>
+      </div>
 
-        const headers = rows[0].split(',');
+      <div class="notice-bottom-divider">
+        ✦
+      </div>
 
-        const thead =
-            document.querySelector('#csvTable thead');
+      <div class="notice-footer">
+        ❤️ Thank you for your understanding and continued support.
+      </div>
 
-        const tbody =
-            document.querySelector('#csvTable tbody');
+    </div> -->
+    <div class="message-section">
+      <p>Every item is lovingly handmade in limited batches to preserve its natural freshness and ensure premium quality, free from artificial preservatives. After receiving your order, we will contact you with availability and payment details to confirm the order.</p>
+      <p>Delivery is FREE for the <b>1st Order</b> in our coverage area (<b>Kalyani Nagar</b>, <b>Koregaon Park</b>, <b>Viman Nagar</b> and <b>Yerwada</b>). Delivery fee of <b>₹35</b> is applicable thereafter.</p>
+      <p>Deliveries outside our coverage area are subject to feasibility and will have additional delivery charges, which will be confirmed based on your location.</p>
+      <p>Orders received <b>before 6 PM</b> will be <b>delivered the next day</b> during chosen time slot.</p>
+	  <p>Orders received <b>after 6 PM</b> are subject to stock availability and re-stocking, we will <b>contact you to confirm</b>.</p>
+      <p>Please ensure your availability during the chosen time slot for a smooth delivery experience.</p>
+	  <p>We also accept bulk orders for businesses and events.</p>
+      <p>If you have any queries please feel free to contact us -<br><b>WhatsApp</b>: <a href="https://wa.me/9604320903" target="_blank" rel="noopener noreferrer">(+91) 9604320903</a><br><b>Instagram</b>: <a href="https://www.instagram.com/thelunaslab" target="_blank" rel="noopener noreferrer">@thelunaslab</a></p>
+    </div>
+    <div class="container">
+      <form id="orderForm">
+        <!-- PRODUCTS -->
+		<div id="products">
+		</div>
+        <!-- CUSTOMER DETAILS -->
+        <div class="form-section">
+          <h3>Customer Details <span class="required-field">* Indicates required field</span></h3>
+          <label>
+            Name <span class="required">*</span>
+          </label>
+          <input type="text" id="customer_name" required>
+          <label>
+            Mobile Number <span class="required">*</span>
+          </label>
+          <input type="tel" id="phone" required pattern="[6-9]{1}[0-9]{9}" maxlength="10" title="Enter valid 10-digit mobile number">
+          <label>
+            Delivery Address <span class="required">*</span>
+          </label>
+          <span class="product-qty">Please provide full and accurate address to ensure proper and timely delivery.</span>
+          <input type="text" id="address" required>
+          <label>
+            Delivery Slot <span class="required">*</span>
+          </label>
+          <select id="timeslot" required>
+            <option value="">Select one</option>
+            <option>11 AM - 1 PM</option>
+            <option>3 PM - 5 PM</option>
+            <option>7 PM - 9 PM</option>
+          </select>
+          <label>Email</label>
+          <input type="email" id="email" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" title="Please enter a valid email (example: name@gmail.com)">
+          <label>Additional Note</label>
+          <input type="text" id="note">
+          <button type="submit" class="submit" id="submitBtn" disabled>Place Order</button>
+        </div>
+      </form>
+    </div>
+    <div id="loadingOverlay">
+      <div class="spinner"></div>
+      <p>Placing your order...</p>
+    </div>
+    <div id="successOverlay">
+      <div class="success-checkmark">
+        <div class="check-icon">
+          <span class="icon-line line-tip"></span>
+          <span class="icon-line line-long"></span>
+          <div class="icon-circle"></div>
+          <div class="icon-fix"></div>
+        </div>
+      </div>
+      <span class="success-message">Maraming salamat po!</span>
+      <br>
+      <span class="success-message">Order placed successfully.</span>
+      <span class="success-message" id="orderNumber"></span>
+      <span class="success-message">We will contact you via WhatsApp as soon as possible.</span>
+      <br>
+      <span class="success-message">Love,</span>
+      <span class="success-message">Luna's</span>
+    </div>
 
-        // Create Header Row
-        let headerRow = '<tr>';
+    <!-- CART MODAL -->
+    <div id="cartModal" class="cart-modal" onclick="outsideModalClick(event)">
+      <div class="cart-modal-content">
 
-        headers.forEach(header => {
-            headerRow += `<th>${header}</th>`;
-        });
+        <h3>🧺 Your Basket</h3>
 
-        headerRow += '</tr>';
+        <table id="cartTable">
+          <thead>
+            <tr>
+              <th>&nbsp;&nbsp;&nbsp;&nbsp;Product</th>
+              <th>Qty</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
 
-        thead.innerHTML = headerRow;
+        <button onclick="closeCartModal()" class="close-btn">Close</button>
 
-        // Create Data Rows
-        for (let i = 1; i < rows.length; i++) {
+      </div>
+    </div>
 
-            const columns = rows[i].split(',');
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script>
+      let isSubmitting = false;
+      const scriptURL = "";
 
-            let rowHTML = '<tr>';
+      function addItem(id, btn) {
+        document.getElementById(id).value = 1;
+        document.getElementById(id + "_display").innerText = 1;
+        document.getElementById(id + "_counter").style.display = "flex";
+        btn.style.display = "none";
+        const plusBtn = document.getElementById(id + "_plus");
+        plusBtn.disabled = false;
+        plusBtn.style.opacity = "1";
+        plusBtn.style.cursor = "pointer";
+        updateCart();
+      }
 
-            columns.forEach(column => {
-                rowHTML += `<td>${column}</td>`;
-            });
-
-            rowHTML += '</tr>';
-
-            tbody.innerHTML += rowHTML;
+      function changeQty(id, delta) {
+        let input = document.getElementById(id);
+        let val = Math.max(0, Math.min(5, parseInt(input.value) + delta));
+        input.value = val;
+        document.getElementById(id + "_display").innerText = val;
+        const plusBtn = document.getElementById(id + "_plus");
+        /* DISABLE + BUTTON AT MAX */
+        if (val >= 5) {
+          plusBtn.disabled = true;
+          plusBtn.style.opacity = "0.5";
+          plusBtn.style.cursor = "not-allowed";
+        } else {
+          plusBtn.disabled = false;
+          plusBtn.style.opacity = "1";
+          plusBtn.style.cursor = "pointer";
         }
-    })
-    .catch(error => {
-        alert('Error loading CSV:' + error);
-    });
-</script>
+        if (val === 0) {
+          document.getElementById(id + "_counter").style.display = "none";
+          document.querySelector(`[onclick="addItem('${id}', this)"]`).style.display = "block";
+        }
+        updateCart();
+      }
 
-</body>
+      function updateCart() {
+        const ids = ["mango_grande", "mango_mini", "coffee_grande", "coffee_mini", "coffee_jelly", "combo_1", "combo_2", "combo_3", "combo_4", "combo_5"];
+        let total = ids.reduce((sum, id) =>
+          sum + parseInt(document.getElementById(id).value), 0
+        );
+        const bar = document.getElementById("cartBar");
+        if (total > 0) {
+          bar.style.display = "block";
+          bar.innerText = "🧺 " + total;
+        } else {
+          bar.style.display = "none";
+        }
+        document.getElementById("submitBtn").disabled = total === 0;
+      }
+      /* PREVENT BACK NAVIGATION DURING SUBMIT */
+      window.addEventListener("popstate", function() {
+        if (isSubmitting) {
+          history.pushState(null, null, location.href);
+        }
+      });
+      /* keep history locked */
+      history.pushState(null, null, location.href);
+      window.addEventListener("beforeunload", function(e) {
+        if (isSubmitting) {
+          e.preventDefault();
+          e.returnValue = "";
+        }
+      });
+      // phone restriction
+      document.getElementById("phone").addEventListener("input", function() {
+        this.value = this.value.replace(/[^0-9]/g, "");
+      });
+      /* NETWORK TIMEOUT PROTECTION */
+      function fetchWithTimeout(resource, options = {}, timeout = 120000) {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        return fetch(resource, {
+          ...options,
+          signal: controller.signal
+        }).finally(() => clearTimeout(id));
+      }
+      document.getElementById("orderForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        document.getElementById("loadingOverlay").style.display = "flex";
+        isSubmitting = true;
+        const form = document.getElementById("orderForm");
+        Array.from(form.elements).forEach(element => element.disabled = true);
+        const ids = ["mango_grande", "mango_mini", "coffee_grande", "coffee_mini", "coffee_jelly", "combo_1", "combo_2", "combo_3", "combo_4", "combo_5"];
+        const products = ids.map(id => ({
+          name: id,
+          qty: +document.getElementById(id).value
+        })).filter(p => p.qty > 0);
+        fetchWithTimeout(scriptURL, {
+            method: "POST",
+            body: JSON.stringify({
+              name: customer_name.value,
+              phone: phone.value,
+              address: address.value,
+              timeslot: timeslot.value,
+              email: email.value,
+              note: note.value,
+              products
+            })
+          })
+          .then(res => res.json())
+          .then(res => {
+            isSubmitting = false;
+            document.getElementById("loadingOverlay").style.display = "none";
+            document.getElementById("orderNumber").innerText = "Order number: " + res.orderID;
+            document.getElementById("successOverlay").style.display = "flex";
+          })
+          .catch((error) => {
+            isSubmitting = false;
+            document.getElementById("loadingOverlay").style.display = "none";
+            if (error.name === "AbortError") {
+              alert("Network is slow. Please check connection and try again.");
+            } else {
+              alert("Unable to place order. Please try again.");
+            }
+          });
+      });
+
+      function openCartModal() {
+        populateCartTable();
+        document.getElementById("cartModal").style.display = "flex";
+      }
+
+      function closeCartModal() {
+        document.getElementById("cartModal").style.display = "none";
+      }
+
+      function populateCartTable() {
+        const tbody = document.querySelector("#cartTable tbody");
+        tbody.innerHTML = "";
+        const products = {
+          combo_1: "The Luna's Duo",
+          combo_2: "Signature Pair",
+          combo_3: "Summer Chill Pair",
+          combo_4: "Coffee Lovers Pair",
+          combo_5: "Taste of Luna's",
+          mango_grande: "Mango Float Grande",
+          mango_mini: "Mango Float Mini",
+          coffee_grande: "Coffee Crumble Grande",
+          coffee_mini: "Coffee Crumble Mini",
+          coffee_jelly: "Coffee Jelly"
+        };
+        let hasItems = false;
+        Object.keys(products).forEach(id => {
+          const qty = parseInt(document.getElementById(id)?.value || 0);
+          if (qty > 0) {
+            hasItems = true;
+            const row = `
+        <tr>
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;${products[id]}</td>
+          <td>&nbsp;&nbsp;${qty}</td>
+        </tr>
+      `;
+            tbody.insertAdjacentHTML("beforeend", row);
+          }
+        });
+        if (!hasItems) {
+          tbody.innerHTML =
+            `<tr><td colspan="2">Cart is empty</td></tr>`;
+        }
+      }
+
+      function outsideModalClick(event) {
+        const modalContent =
+          document.querySelector(".cart-modal-content");
+        // if user clicked outside modal box
+        if (!modalContent.contains(event.target)) {
+          closeCartModal();
+        }
+      }
+alert("herE");
+Papa.parse("products.csv", {
+
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+
+    complete: function(results) {
+alert("herE2");
+        const productsDiv =
+            document.getElementById("products");
+
+        results.data.forEach(product => {
+		if (!product.html_id) return;
+
+            productsDiv.innerHTML += `
+        <div class="card">
+          <div class="info">
+            <div class="${product.title_class}"><span class="combo-label">&nbsp;Combo ${product.combo_number}&nbsp;</span>&nbsp;${product.name}</div>
+            <div class="combo-products">${product.description}</div>
+            <div class="name"><span class="name-strike">₹${product.strike_price}</span>&nbsp;&nbsp;₹${product.price}&nbsp;&nbsp;&nbsp;&nbsp;<span class="${product.tag_class}">&nbsp;★ ${product.tag}&nbsp;</span></div>
+          </div>
+          <button type="button" class="add-btn" onclick="addItem('${product.html_id}', this)">ADD</button>
+          <div class="counter" id="${product.html_id}_counter">
+            <button type="button" onclick="changeQty('${product.html_id}', -1)">-</button>
+            <span id="${product.html_id}_display">1</span>
+            <button type="button" id="${product.html_id}_plus" onclick="changeQty('${product.html_id}', 1)">+</button>
+          </div>
+          <input type="hidden" id="${product.html_id}" value="0">
+        </div>
+            `;
+        });
+    },
+        error: function(error) {
+           
+			  if (error.target && error.target.status) {
+        alert("Network Error Code: " + error.target.status + error.target.statusText);
+    } else {
+        alert("Papa Parse Error: " + error);
+    }
+        }
+});
+    </script>
+  </body>
+
 </html>
