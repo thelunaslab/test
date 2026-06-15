@@ -1,0 +1,11 @@
+id,name,quantity,strike_price,price,html_id,combo_number,description,tag,tag_class,title_class
+1,The Luna's Duo,,600,549,combo_1,1,Mango Float Mini (250ml)<br>+ Coffee Crumble Mini (250ml),BEST SELLER,ribbon-gold,name-combo
+2,Signature Pair,,900,799,combo_2,2,Mango Float Grande (400ml)<br>+ Coffee Crumble Grande (400ml),SIGNATURE,ribbon-magenta,name-combo
+3,Summer Chill Pair,,554,499,combo_3,3,Mango Float Mini (250ml)<br>+ Coffee Jelly (300ml),,,name-combo
+4,Coffee Lovers Pair,,504,449,combo_4,4,Coffee Crumble Mini (250ml)<br>+ Coffee Jelly (300ml),,,name-combo
+5,Taste of Luna's,,829,729,combo_5,5,Mango Float Mini (250ml)<br>+ Coffee Crumble Mini (250ml)<br>+ Coffee Jelly (300ml),,,name-combo
+6,Mango Float Grande,400ml,,500,mango_grande,,,,,name-mango
+7,Mango Float Mini,250ml,,325,mango_mini,,,,,name-mango
+8,Coffee Crumble Grande,400ml,,400,coffee_grande,,,,,name-coffee
+9,Coffee Crumble Mini,250ml,,275,coffee_mini,,,,,name-coffee
+10,Coffee Jelly,300ml,,229,coffee_jelly,,,,,name-coffee
