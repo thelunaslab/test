@@ -936,9 +936,39 @@ alert("herE2");
             productsDiv.innerHTML += `
         <div class="card">
           <div class="info">
-            <div class="${product.title_class}"><span class="combo-label">&nbsp;Combo ${product.combo_number}&nbsp;</span>&nbsp;${product.name}</div>
-            <div class="combo-products">${product.description}</div>
-            <div class="name"><span class="name-strike">₹${product.strike_price}</span>&nbsp;&nbsp;₹${product.price}&nbsp;&nbsp;&nbsp;&nbsp;<span class="${product.tag_class}">&nbsp;★ ${product.tag}&nbsp;</span></div>
+            <div class="${product.title_class}">
+			`;
+			if (product.combo_number) {
+				productsDiv.innerHTML += `
+					<span class="combo-label">&nbsp;Combo ${product.combo_number}&nbsp;</span>
+					`;
+			}
+			productsDiv.innerHTML += `
+			&nbsp;${product.name}</div>
+			`;
+			if (product.combo_number) {
+				productsDiv.innerHTML += `
+					<div class="combo-products">${product.description}</div>
+					`;
+			}
+			productsDiv.innerHTML += `
+				<div class="name">
+					`;
+			if (product.strike_price) {
+				productsDiv.innerHTML += `
+				<span class="name-strike">₹${product.strike_price}</span>&nbsp;&nbsp;
+					`;
+			}
+			productsDiv.innerHTML += `
+				₹${product.price}
+					`;
+			if (product.tag) {
+				productsDiv.innerHTML += `
+					&nbsp;&nbsp;&nbsp;&nbsp;<span class="${product.tag_class}">&nbsp;★ ${product.tag}&nbsp;</span>
+					`;
+			}
+			productsDiv.innerHTML += `
+					</div>
           </div>
           <button type="button" class="add-btn" onclick="addItem('${product.html_id}', this)">ADD</button>
           <div class="counter" id="${product.html_id}_counter">
