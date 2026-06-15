@@ -918,7 +918,7 @@
           closeCartModal();
         }
       }
-alert("herE 1");
+alert("herE");
 Papa.parse("products.csv", {
 
     download: true,
@@ -926,56 +926,57 @@ Papa.parse("products.csv", {
     skipEmptyLines: true,
 
     complete: function(results) {
-alert("herE 2");
+alert("herE2");
         const productsDiv =
             document.getElementById("products");
 
         results.data.forEach(product => {
 		if (!product.html_id) return;
 
-            productsDiv.innerHTML += `
-				<div class="card">
-					<div class="info">
-						<div class="${product.title_class}">
-				`;
+			var prdDiv = "";
+            prdDiv += "
+				<div class=\"card\">
+					<div class=\"info\">
+						<div class=\"${product.title_class}\">
+				";
 		if (product.combo_number) {
-			productsDiv.innerHTML += `
-							<span class="combo-label">&nbsp;Combo ${product.combo_number}&nbsp;</span>&nbsp;
-				`;
+			prdDiv += "
+							<span class=\"combo-label\">&nbsp;Combo ${product.combo_number}&nbsp;</span>&nbsp;
+				";
 		}
-			productsDiv.innerHTML += `
+			prdDiv += "
 							${product.name}&nbsp;
-			`;
+			";
 		if (product.quantity) {
-			productsDiv.innerHTML += `
-							<span class="product-qty">(${product.quantity})</span>
-				`;
+			prdDiv += "
+							<span class=\"product-qty\">(${product.quantity})</span>
+				";
 		}
-			productsDiv.innerHTML += `
+			prdDiv += "
 						</div>
-			`;
+			";
 		if (product.combo_number) {
-			productsDiv.innerHTML += `
-						<div class="combo-products">${product.description}</div>
-			`;
+			prdDiv += "
+						<div class=\"combo-products\">${product.description}</div>
+			";
 		}
-			productsDiv.innerHTML += `
-						<div class="name">
-			`;
+			prdDiv += "
+						<div class=\"name\">
+			";
 		if (product.strike_price) {
-			productsDiv.innerHTML += `
-							<span class="name-strike">₹${product.strike_price}</span>&nbsp;&nbsp;
-			`;
+			prdDiv += "
+							<span class=\"name-strike\">₹${product.strike_price}</span>&nbsp;&nbsp;
+			";
 		}
-			productsDiv.innerHTML += `
+			prdDiv += "
 							₹${product.price}
-			`;
+			";
 		if (product.tag) {
-			productsDiv.innerHTML += `
-							&nbsp;&nbsp;&nbsp;&nbsp;<span class="${product.tag_class}">&nbsp;★ ${product.tag}&nbsp;</span>
-				`;
+			prdDiv += "
+							&nbsp;&nbsp;&nbsp;&nbsp;<span class=\"${product.tag_class}\">&nbsp;★ ${product.tag}&nbsp;</span>
+				";
 		}
-			productsDiv.innerHTML += `
+			productsDiv.innerHTML = prdDiv + `
 						</div>
 					</div>
 					<button type="button" class="add-btn" onclick="addItem('${product.html_id}', this)">ADD</button>
