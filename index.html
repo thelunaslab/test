@@ -918,7 +918,7 @@
           closeCartModal();
         }
       }
-alert("herE");
+alert("herE 1");
 Papa.parse("products.csv", {
 
     download: true,
@@ -926,57 +926,58 @@ Papa.parse("products.csv", {
     skipEmptyLines: true,
 
     complete: function(results) {
-alert("herE2");
+alert("herE 2");
         const productsDiv =
             document.getElementById("products");
+
+		let productsHtml = "";
 
         results.data.forEach(product => {
 		if (!product.html_id) return;
 
-			var prdDiv = "";
-            prdDiv += "
-				<div class=\"card\">
-					<div class=\"info\">
-						<div class=\"${product.title_class}\">
-				";
+            productsHtml += `
+				<div class="card">
+					<div class="info">
+						<div class="${product.title_class}">
+				`;
 		if (product.combo_number) {
-			prdDiv += "
-							<span class=\"combo-label\">&nbsp;Combo ${product.combo_number}&nbsp;</span>&nbsp;
-				";
+			productsHtml += `
+							<span class="combo-label">&nbsp;Combo ${product.combo_number}&nbsp;</span>&nbsp;
+				`;
 		}
-			prdDiv += "
+			productsHtml += `
 							${product.name}&nbsp;
-			";
+			`;
 		if (product.quantity) {
-			prdDiv += "
-							<span class=\"product-qty\">(${product.quantity})</span>
-				";
+			productsHtml += `
+							<span class="product-qty">(${product.quantity})</span>
+				`;
 		}
-			prdDiv += "
+			productsHtml += `
 						</div>
-			";
+			`;
 		if (product.combo_number) {
-			prdDiv += "
-						<div class=\"combo-products\">${product.description}</div>
-			";
+			productsHtml += `
+						<div class="combo-products">${product.description}</div>
+			`;
 		}
-			prdDiv += "
-						<div class=\"name\">
-			";
+			productsHtml += `
+						<div class="name">
+			`;
 		if (product.strike_price) {
-			prdDiv += "
-							<span class=\"name-strike\">₹${product.strike_price}</span>&nbsp;&nbsp;
-			";
+			productsHtml += `
+							<span class="name-strike">₹${product.strike_price}</span>&nbsp;&nbsp;
+			`;
 		}
-			prdDiv += "
+			productsHtml += `
 							₹${product.price}
-			";
+			`;
 		if (product.tag) {
-			prdDiv += "
-							&nbsp;&nbsp;&nbsp;&nbsp;<span class=\"${product.tag_class}\">&nbsp;★ ${product.tag}&nbsp;</span>
-				";
+			productsHtml += `
+							&nbsp;&nbsp;&nbsp;&nbsp;<span class="${product.tag_class}">&nbsp;★ ${product.tag}&nbsp;</span>
+				`;
 		}
-			productsDiv.innerHTML = prdDiv + `
+			productsHtml += `
 						</div>
 					</div>
 					<button type="button" class="add-btn" onclick="addItem('${product.html_id}', this)">ADD</button>
@@ -988,7 +989,8 @@ alert("herE2");
 					<input type="hidden" id="${product.html_id}" value="0">
 				</div>
             `;
-			alert(productsDiv.innerHTML);
+
+			productsDiv.innerHTML = productsHtml;
         });
     },
         error: function(error) {
